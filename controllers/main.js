@@ -18,28 +18,10 @@ const login = async (req, res) => {
 
 const dashboard = async(req, res) => {
     console.log("dashboard")
-    authHeader = req.headers.authorization
-
-    if (!authHeader || ! authHeader.startsWith('Bearer')){
-        console .log("reach here")
-        error = new customApiError("login first", 401)
-        throw error
-    }
-
-    token = authHeader.split(' ')[1]
-
-    try {
-        jwt.verify(token, process.env.JWTSECRET)
-    } catch {
-        error = new customApiError("invalid login", 401)
-        throw error
-    }
-    // verify the token 
-     const {username, id } = jwt.decode(token)
 
     const luckyNumber = Math.floor(Math.random() * 100)
     console.log("dashboard")
-    res.status(200).json({msg: `Hello ${username}`, secret: `here is ur lucky number ${luckyNumber}`})
+    res.status(200).json({msg: `Hello ${req.user.username}`, secret: `here is ur lucky number ${luckyNumber}`})
 }
 
 module.exports = {
