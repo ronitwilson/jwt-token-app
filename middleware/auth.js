@@ -1,11 +1,12 @@
 const jwt = require('jsonwebtoken')
+const {unauthenticatedError} = require('../errors')
 const authMiddleware = (req, res, next) => {
     console.log("auth Middleware")
     authHeader = req.headers.authorization
     console.log("debug 1")
     if (!authHeader || ! authHeader.startsWith('Bearer')){
         console .log("reach here")
-        error = new customApiError("login first", 401)
+        error = new unauthenticatedError("login first")
         throw error
     }
     token = authHeader.split(' ')[1]
@@ -13,7 +14,7 @@ const authMiddleware = (req, res, next) => {
     try {
         jwt.verify(token, process.env.JWTSECRET)
     } catch {
-        error = new customApiError("invalid login", 401)
+        error = new unauthenticatedError("invalid login")
         throw error
     }
     const {username, id } = jwt.decode(token)
