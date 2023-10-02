@@ -1,4 +1,5 @@
 const customApiError = require("../errors/custom-error")
+const jwt = require('jsonwebtoken')
 
 const login = async (req, res) => {
     console.log(req.body)
@@ -8,7 +9,11 @@ const login = async (req, res) => {
         const error = new customApiError("need username password", 400)
         throw(error)
     }
-    res.status(200).json({msg: "Login/reg/signup"})
+    date = new Date()
+    id = date.getDate()
+    console.log(id)
+    token = jwt.sign({id, username}, process.env.JWTSECRET, {expiresIn:'30d'})
+    res.status(200).json({msg: "user created", token})
 }
 
 const dashboard = async(req, res) => {
