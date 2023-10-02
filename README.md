@@ -30,3 +30,66 @@ Authorization: Bearer <token>
 example from the sample frontend how after login it is stored
 
     localStorage.setItem( 'token' , data.token)
+
+## Next part
+
+set authorization in the postman header section  using this syntax
+    Authorization: Bearer <token>
+
+in the dashboard function
+
+authHeader = req.headers.authorizations.
+
+if !authHeader ||! authHeader.startsWith('Bearer) -> send custom error with code 401
+
+test it!!
+
+get the token part out in a variable = split(' ')[1]
+
+
+### Implement verification
+
+try catach => jwt.verify(token, process.env.secretToken)
+in catch throw custom error with code 401
+
+instead of hello ronit use the decoded username -> u can use decode.username
+
+
+### setup our own middleware
+
+have a function which check req.header.authorization 
+
+and set the function in the router like this 
+router. route( '/dashboardi ) .get(authMiddleware, dashboard)
+
+get the id and user name in the auth.js  authmiddleware function and send it seperately in the req.user (so that we do this jwt handling only on the middleware)  -> req.user = { id, username }
+
+don't forget to call next
+
+### stream line errors
+    create index.js in the errors folder
+        bad-request.js
+        unauthenticated.js
+
+BadRequest class extends CustomApError -> status code is hardcoded       
+
+do same for Unauthenticated class
+
+in index js import customError, BadRequest, Unauthenticated (this helps to import error as one object instead of seperate files)
+
+module. exports = {
+CustomAPIError,
+BadRequestError,
+UnauthenticatedError,
+}
+
+#### using status codes package
+    http-status-codes 
+        then we can use statuscode.OK etc
+
+const {StatusCodes} = reuire('http-status—codes') ;
+        statusCode= StatusCodes.BAD_REQUEST
+
+
+change custom errors to the specific folders 
+    example -> const { UnauthenticatedError = require( '../errors')
